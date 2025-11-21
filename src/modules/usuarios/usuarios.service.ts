@@ -1,32 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { UsuariosDto } from './dto/usuarios.dto';
 import { Usuario } from './entities/usuarios.entity';
+import { DatabaseConnection } from 'src/connection/database/database.module';
 
 
 @Injectable()
 export class UsuariosService {
 
-    constructor (
-        @InjectRepository(Usuario)
-        private readonly usuarioRepository: Repository<Usuario>,
-    ) {  }
+   
+    private databaseConnection: DatabaseConnection;
 
-    async getAllUsuarios() {
-        return await this.usuarioRepository.find();
+    constructor(databaseConnection: DatabaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
 
-    async createUsuario(data: Partial<Usuario>): Promise<Usuario> {
-        const newUsuario = this.usuarioRepository.create(data);
-        return await this.usuarioRepository.save(newUsuario);
+    async getAllUsuarios() {
+        const connection = this.databaseConnection.getConnection();
+        const [rows] = await connection.query('SELECT * FROM usuarios');
+        return rows;
+    }
+
+    async createUsuario(usuariosDto: UsuariosDto)  {
+        const connection = this.databaseConnection.getConnection();
+        const response = await connection.query('INSERT INTO usuarios (username, password, rol) VALUES (?, ?, ?, ?)', usuariosDto);
+        return response;
     }
 
     async updateUsuario(id: number, data: Partial<Usuario>) {
-        await this.usuarioRepository.update(id, data);
-        return this.usuarioRepository.findOneBy({ id });
+        const connection = this.databaseConnection.getConnection();
+        const response = connection.query('UPDATE')
     }
 
     async deleteUsuario(id: number): Promise<void> {
-        await this.usuarioRepository.delete(id);
+        const connection = this.databaseConnection.getConnection();
+        const response = connection.query('')
     }
 }
