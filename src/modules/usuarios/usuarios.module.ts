@@ -1,10 +1,13 @@
 import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { UsuariosController } from "./usuarios.controller";
-import { UsuariosService } from "./usuarios.service";
-import { DatabaseModule } from "src/connection/database/database.module";
+import { UsuarioDao } from "./dao/usuario.dao";
+import { UsuarioCqrs } from "./cqrs/usuario.cqrs";
+import { Usuario } from "./entities/usuarios.entity";
 
 @Module({
-    imports: [DatabaseModule],
+    imports: [TypeOrmModule.forFeature([Usuario])],
     controllers: [UsuariosController],
-    providers: [UsuariosService],
-}) export class UsuariosModule {}
+    providers: [UsuarioDao, UsuarioCqrs],
+    exports: [UsuarioDao], // Export DAO for Auth module if needed
+}) export class UsuariosModule { }
