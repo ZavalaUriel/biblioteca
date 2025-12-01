@@ -5,10 +5,9 @@ export class UtlApiService {
 
     async buscarLibrosExterno(titulo: string): Promise<any> {
         try {
-            const urlCompanero = `http://192.168.1.50:3000/libros/buscar?q=${titulo}`;
+            const urlEquipo = `http://192.168.1.50:3000/libros/buscar?q=${titulo}`;
 
-            // Usamos fetch nativo (sin axios)
-            const respuesta = await fetch(urlCompanero, {
+            const respuesta = await fetch(urlEquipo, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
