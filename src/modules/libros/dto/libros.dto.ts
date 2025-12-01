@@ -1,11 +1,11 @@
+import { Genero } from "../entities/libros.entity";
 
 
 export class LibrosDTO {
 
-    id: number;
     titulo: string;
     autor: string;
-    genero: string;
+    genero: Genero;
     portada: string;
     archivo_pdf: string;
 

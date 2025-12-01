@@ -12,8 +12,9 @@ export class UsuarioCqrs {
     async crearUsuario(usuarioDto: UsuariosDto): Promise<Usuario> {
         const nuevoUsuario = new Usuario();
         // Map DTO to Entity. DTO has username, Entity has nombre.
-        nuevoUsuario.nombre = usuarioDto.username;
+        nuevoUsuario.username = usuarioDto.username;
         nuevoUsuario.password = usuarioDto.password;
+        nuevoUsuario.nombreCompleto = usuarioDto.nombreCompleto;
         nuevoUsuario.rol = usuarioDto.rol;
         return await this.usuarioDao.guardar(nuevoUsuario);
     }
@@ -21,10 +22,11 @@ export class UsuarioCqrs {
     async actualizarUsuario(id: number, usuarioDto: UsuariosDto): Promise<Usuario> {
         const usuario = new Usuario();
         usuario.id = id;
-        usuario.nombre = usuarioDto.username;
+        usuario.username = usuarioDto.username;
         usuario.password = usuarioDto.password;
+        usuario.nombreCompleto = usuarioDto.nombreCompleto;
         usuario.rol = usuarioDto.rol;
-        return await this.usuarioDao.guardar(usuario);
+        return await this.usuarioDao.update(usuario);
     }
 
     async eliminarUsuario(id: number): Promise<void> {

@@ -13,7 +13,7 @@ export class LibrosEntity {
     autor: string;
 
     @Column({ type: 'varchar', length: 100 })
-    genero: string;
+    genero: Genero;
 
     @Column({ type: 'longtext' })
     portada: string;
@@ -21,4 +21,17 @@ export class LibrosEntity {
     @Column({ type: 'longtext' })
     archivo_pdf: string;
 
+}
+
+export enum Genero {
+    FICCION = 'Ficción',
+    NO_FICCION = 'No Ficción',
+    MISTERIO = 'Misterio',
+    FANTASIA = 'Fantasía',
+    CIENCIA_FICCION = 'Ciencia Ficción',
+    ROMANCE = 'Romance',
+    HISTORICO = 'Histórico',
+    BIOGRAFIA = 'Biografía',
+    AUTOAYUDA = 'Autoayuda',
+    POESIA = 'Poesía'
 }

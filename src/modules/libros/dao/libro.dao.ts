@@ -26,6 +26,10 @@ export class LibroDao {
         return await this.libroRepository.save(libro);
     }
 
+    async actualizar(id: number, libro: Partial<LibrosEntity>): Promise<void> {
+        await this.libroRepository.update(id, libro);
+    }
+
     async eliminar(id: number): Promise<void> {
         await this.libroRepository.delete(id);
     }

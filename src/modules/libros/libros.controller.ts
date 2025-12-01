@@ -1,10 +1,13 @@
-import { Controller } from "@nestjs/common";
+import { Controller, UseGuards } from "@nestjs/common";
 import { Get, Post, Put, Delete, Param, Body, Query } from "@nestjs/common"
 import { LibrosDTO } from "./dto/libros.dto";
 import { LibroDao } from "./dao/libro.dao";
 import { LibroCqrs } from "./cqrs/libro.cqrs";
 import { UtlApiService } from "./infrastructure/utl-api.service";
 import { LibroViewModel } from "./viewmodel/libro.viewmodel";
+import { JwtAuthGuard} from "src/auth/guard/jwt-auth.guard";
+import { RolesAuthGuard } from "src/auth/guard/roles-auth.guard";
+import { Roles, RolesEnum } from "src/auth/decorators/roles.decorator";
 
 @Controller('libro')
 export class LibrosController {
@@ -15,19 +18,17 @@ export class LibrosController {
         private readonly utlApiService: UtlApiService
     ) { }
 
+    @UseGuards(JwtAuthGuard, RolesAuthGuard)
+    @Roles(RolesEnum.BIBLIOTECARIO, RolesEnum.ALUMNO)
     @Get('/')
     async getLibros(@Query('q') query: string) {
-        // Search local books
+        
+
         const librosLocales = query
             ? await this.libroDao.buscarLibrosPorTitulo(query)
             : await this.libroDao.obtenerTodos();
 
         const viewModelsLocales = librosLocales.map(l => LibroViewModel.fromEntity(l, 'interno'));
-
-        // Search external books (Student requirement: "Buscador de los alumnos")
-        // Only if query is present? Or always? Requirement says "al acceder algún alumno, el sistema consulte de forma global"
-        // But usually search is triggered. Let's assume if query is present or just fetch all if possible (but external might need query).
-        // Requirement: "si yo estudio en la Universidad Tecnológica de León y lanzo una búsqueda... el sistema realice una búsqueda en las bibliotecas de todas las universidades"
 
         let viewModelsExternos: LibroViewModel[] = [];
         if (query) {
@@ -42,18 +43,39 @@ export class LibrosController {
         return [...viewModelsLocales, ...viewModelsExternos];
     }
 
+    @UseGuards(JwtAuthGuard, RolesAuthGuard)
+    @Roles(RolesEnum.BIBLIOTECARIO)
     @Post('/create')
     async createLibro(@Body() LibrosDTO: LibrosDTO) {
-        return this.libroCqrs.registrarLibro(LibrosDTO);
+        try {
+            const response = await this.libroCqrs.registrarLibro(LibrosDTO);
+            return {message: 'Libro creado exitosamente'};
+        } catch (error) {
+            return {message: 'Error al crear el libro', error: error.message};
+        }
     }
 
+    @UseGuards(JwtAuthGuard, RolesAuthGuard)
+    @Roles(RolesEnum.BIBLIOTECARIO) 
     @Put('/update/:id')
     async updateLibro(@Param('id') id: number, @Body() LibrosDTO: LibrosDTO) {
-        return this.libroCqrs.actualizarLibro(id, LibrosDTO);
+        try {
+            const response = await this.libroCqrs.actualizarLibro(id, LibrosDTO);
+            return {message: 'Libro actualizado exitosamente'};
+        } catch (error) {
+            return {message: 'Error al actualizar el libro', error: error.message};
+        }
     }
 
+    @UseGuards(JwtAuthGuard, RolesAuthGuard)
+    @Roles(RolesEnum.BIBLIOTECARIO)
     @Delete('/delete/:id')
     async deleteLibro(@Param('id') id: number) {
-        return this.libroCqrs.eliminarLibro(id);
+        try {
+            await this.libroCqrs.eliminarLibro(id);
+            return {message: 'Libro eliminado exitosamente'};
+        } catch (error) {
+            return {message: 'Error al eliminar el libro', error: error.message};
+        }
     }
 }

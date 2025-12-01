@@ -5,7 +5,8 @@ export class LibroViewModel {
     titulo: string;
     universidad: string;
     genero: string;
-    portada: string; // Base64 para mostrar la imagen
+    portada: string; 
+    archivo_pdf: string; 
     esExterno: boolean;
 
 
@@ -15,6 +16,7 @@ export class LibroViewModel {
             universidad: libro.universidad,
             genero: libro.genero,
             portada: libro.portada,
+            archivo_pdf: libro.archivo_pdf,
             esExterno: origen === 'externo',
         };
     }

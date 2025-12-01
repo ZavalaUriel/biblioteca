@@ -19,12 +19,17 @@ export class UsuarioDao {
         return await this.usuarioRepository.findOneBy({ id });
     }
 
-    async buscarPorNombre(nombre: string): Promise<Usuario | null> {
-        return await this.usuarioRepository.findOneBy({ nombre });
+    async buscarPorNombre(username: string): Promise<Usuario | null> {
+        return await this.usuarioRepository.findOneBy({ username });
     }
 
     async guardar(usuario: Usuario): Promise<Usuario> {
         return await this.usuarioRepository.save(usuario);
+    }
+
+    async update(usuario: Usuario): Promise<Usuario> {
+        await this.usuarioRepository.update(usuario.id, usuario);
+        return this.buscarPorId(usuario.id) as Promise<Usuario>;
     }
 
     async eliminar(id: number): Promise<void> {
