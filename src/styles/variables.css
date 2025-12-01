@@ -1,0 +1,138 @@
+:root {
+  /* Tema Tech Moderno - Negro Premium */
+  --space-black: #000000;
+  --space-dark: #0a0a0a;
+  --space-darker: #141414;
+  --space-purple: #6366f1;
+  --space-purple-light: #818cf8;
+  --space-purple-dark: #4f46e5;
+  --space-blue: #3b82f6;
+  --space-cyan: #06b6d4;
+  --space-pink: #ec4899;
+  --space-violet: #8b5cf6;
+  
+  /* Colores de acento */
+  --accent-primary: #4a5568;
+  --accent-secondary: #5a67d8;
+  --accent-success: #48bb78;
+  --accent-warning: #ed8936;
+  --accent-danger: #f56565;
+  --accent-info: #4299e1;
+  
+  /* Grises y neutrales */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  
+  /* Texto */
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  --text-inverse: #0a0a0f;
+  
+  /* Fondos */
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #141414;
+  --bg-elevated: #1a1a1a;
+  
+  /* Bordes */
+  --border-color: #27272a;
+  --border-hover: #3f3f46;
+  
+  /* Sombras simplificadas */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
+  --shadow-glow: none;
+  --shadow-glow-lg: none;
+  
+  /* Espaciado */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  
+  /* Radios */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+  
+  /* Transiciones */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+  
+  /* Z-index */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--space-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--space-purple);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--space-purple-light);
+}
+
+/* Selección de texto */
+::selection {
+  background: var(--space-purple);
+  color: var(--text-primary);
+}
+
+::-moz-selection {
+  background: var(--space-purple);
+  color: var(--text-primary);
+}

@@ -1,0 +1,9 @@
+/* App.css - Minimal styles, most styling is in component-specific CSS files */
+
+.app-container {
+  min-height: 100vh;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+    #000000;
+}
