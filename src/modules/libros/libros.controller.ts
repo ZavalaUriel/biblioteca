@@ -18,8 +18,7 @@ export class LibrosController {
         private readonly utlApiService: UtlApiService
     ) { }
 
-    @UseGuards(JwtAuthGuard, RolesAuthGuard)
-    @Roles(RolesEnum.BIBLIOTECARIO, RolesEnum.ALUMNO)
+    
     @Get('/')
     async getLibros(@Query('q') query: string) {
         
