@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { LibrosEntity } from "../entities/libros.entity";
 import { LibrosDTO } from "../dto/libros.dto";
 import { LibroDao } from "../dao/libro.dao";
@@ -24,7 +24,11 @@ export class LibroCqrs {
 
     async actualizarLibro(id: number, librosDto: LibrosDTO): Promise<LibrosEntity> {
         await this.libroDao.actualizar(id, librosDto);
-        return await this.libroDao.obtenerPorId(id);
+        const libro = await this.libroDao.obtenerPorId(id);
+        if (!libro) {
+            throw new NotFoundException(`Libro con id ${id} no encontrado`);
+        }
+        return libro;
     }
 
 }

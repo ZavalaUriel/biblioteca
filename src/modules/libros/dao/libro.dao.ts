@@ -14,12 +14,16 @@ export class LibroDao {
 
     async buscarLibrosPorTitulo(titulo: string): Promise<LibrosEntity[]> {
         return await this.libroRepository.find({
-            where: { titulo: Like(`%${titulo}%`) } // Asumiendo búsqueda exacta o ajusta con Like
+            where: { titulo: Like(`%${titulo}%`) } 
         });
     }
 
     async obtenerTodos(): Promise<LibrosEntity[]> {
         return await this.libroRepository.find();
+    }
+
+    async obtenerPorId(id: number): Promise<LibrosEntity | null> {
+        return await this.libroRepository.findOneBy({ id });
     }
 
     async guardar(libro: LibrosEntity): Promise<LibrosEntity> {

@@ -21,6 +21,9 @@ export class LibrosEntity {
     @Column({ type: 'longtext' })
     archivo_pdf: string;
 
+    @Column({ type: 'varchar', length: 255, default: 'Universidad Tecnológica de La Habana', nullable: true })
+    universidad: string;
+
 }
 
 export enum Genero {

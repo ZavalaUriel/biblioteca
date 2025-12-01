@@ -4,6 +4,7 @@ export class LibroViewModel {
 
     titulo: string;
     universidad: string;
+    autor: string;
     genero: string;
     portada: string; 
     archivo_pdf: string; 
@@ -14,6 +15,7 @@ export class LibroViewModel {
         return {
             titulo: libro.titulo,
             universidad: libro.universidad,
+            autor: libro.autor,
             genero: libro.genero,
             portada: libro.portada,
             archivo_pdf: libro.archivo_pdf,
