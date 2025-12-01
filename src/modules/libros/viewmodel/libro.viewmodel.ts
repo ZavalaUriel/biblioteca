@@ -2,6 +2,7 @@
 
 export class LibroViewModel {
 
+    id: number;
     titulo: string;
     universidad: string;
     autor: string;
@@ -13,6 +14,7 @@ export class LibroViewModel {
 
     static fromEntity(libro: any, origen: string): LibroViewModel {
         return {
+            id: libro.id,
             titulo: libro.titulo,
             universidad: libro.universidad,
             autor: libro.autor,
