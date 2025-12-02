@@ -24,7 +24,13 @@ export const BookCard: React.FC<BookCardProps> = ({ book, onClick }) => {
         <div className="book-cover-wrapper">
           {book.portada ? (
             <img
-              src={`data:image/jpeg;base64,${book.portada}`}
+              src={
+                book.portada.startsWith('/uploads') 
+                  ? `${import.meta.env.VITE_API_URL}${book.portada}`
+                  : book.portada.startsWith('data:') || book.portada.startsWith('http')
+                  ? book.portada 
+                  : `data:image/jpeg;base64,${book.portada}`
+              }
               alt={book.titulo}
               className="book-cover"
             />
@@ -35,7 +41,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book, onClick }) => {
           )}
           <div className="book-overlay">
             <span className="book-genre">{book.genero}</span>
-            {book.fuente === 'externo' && (
+            {(book.fuente === 'externo' || (book as any).esExterno) && (
               <span className="book-source-badge">
                 <Globe size={12} />
                 Externo
@@ -46,10 +52,12 @@ export const BookCard: React.FC<BookCardProps> = ({ book, onClick }) => {
         
         <div className="book-info">
           <h3 className="book-title">{book.titulo}</h3>
-          <div className="book-author">
-            <UserIcon size={14} />
-            <span>{book.autor}</span>
-          </div>
+          {book.autor && (
+            <div className="book-author">
+              <UserIcon size={14} />
+              <span>{book.autor}</span>
+            </div>
+          )}
           <p className="book-university">{book.universidad}</p>
         </div>
       </Card>

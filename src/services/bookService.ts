@@ -14,6 +14,14 @@ export const bookService = {
   },
 
   createBook: async (book: LibroDTO): Promise<{ message: string }> => {
+    console.log('📤 bookService.createBook enviando:', {
+      titulo: book.titulo,
+      autor: book.autor,
+      genero: book.genero,
+      portada_length: book.portada?.length || 0,
+      archivo_pdf_length: book.archivo_pdf?.length || 0
+    });
+    
     const response = await api.post('/libro/create', book);
     return response.data;
   },

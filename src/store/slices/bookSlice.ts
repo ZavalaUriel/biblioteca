@@ -42,8 +42,9 @@ export const createBook = createAsyncThunk(
   'books/create',
   async (book: LibroDTO, { rejectWithValue }) => {
     try {
-      await bookService.createBook(book);
-      return book;
+      const response = await bookService.createBook(book);
+      // No devolver los File objects, solo la respuesta del servidor
+      return response;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Error al crear el libro');
     }

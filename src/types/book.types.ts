@@ -17,18 +17,19 @@ export interface Libro {
   id?: number;
   _id?: string;
   titulo: string;
-  autor: string;
-  genero: GeneroLibroType;
+  autor?: string;
+  genero: GeneroLibroType | string;
   portada: string;
-  archivo_pdf: string;
+  pdf?: string;
   universidad: string;
   fuente?: 'interno' | 'externo';
+  esExterno?: boolean;
 }
 
 export interface LibroDTO {
   titulo: string;
-  autor: string;
-  genero: GeneroLibroType;
+  autor?: string;
+  genero: GeneroLibroType | string;
   portada: string;
   archivo_pdf: string;
   universidad?: string;
@@ -40,7 +41,7 @@ export interface LibroViewModel {
   autor: string;
   genero: string;
   portada: string;
-  archivo_pdf: string;
+  pdf: string;
   universidad: string;
   fuente: 'interno' | 'externo';
 }
@@ -81,7 +82,7 @@ export interface LibroValidaciones {
     required: boolean;
     format: string;
   };
-  archivo_pdf: {
+  pdf: {
     required: boolean;
     format: string;
   };

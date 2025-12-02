@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchBooks, createBook, updateBook, deleteBook } from '../store/slices/bookSlice';
@@ -18,10 +18,16 @@ export const BooksPage: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<Libro | null>(null);
   const [bookToEdit, setBookToEdit] = useState<Libro | null>(null);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+  const isInitialMount = useRef(true);
   
   const dispatch = useAppDispatch();
   const { books, loading } = useAppSelector((state) => state.books);
   const { user } = useAppSelector((state) => state.auth);
+
+  // Cargar libros solo una vez al montar
+  useEffect(() => {
+    dispatch(fetchBooks(undefined));
+  }, [dispatch]);
 
   // Debounce para búsqueda
   useEffect(() => {
@@ -31,10 +37,19 @@ export const BooksPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Cargar libros cuando cambia la búsqueda debounced
+  // Buscar solo cuando el usuario escribe (no en mount)
   useEffect(() => {
-    dispatch(fetchBooks(debouncedSearchQuery || undefined));
-  }, [dispatch, debouncedSearchQuery]);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    
+    if (debouncedSearchQuery) {
+      dispatch(fetchBooks(debouncedSearchQuery));
+    } else {
+      dispatch(fetchBooks(undefined));
+    }
+  }, [debouncedSearchQuery, dispatch]);
 
   const filteredBooks = books.filter((book) => {
     const matchesGenre = !selectedGenre || book.genero === selectedGenre;
@@ -62,7 +77,8 @@ export const BooksPage: React.FC = () => {
         await dispatch(createBook(bookData)).unwrap();
       }
       setIsFormModalOpen(false);
-      await dispatch(fetchBooks());
+      // Recargar la lista después de crear/actualizar
+      dispatch(fetchBooks(debouncedSearchQuery || undefined));
     } catch (error) {
       console.error('Error al guardar el libro:', error);
       alert('Error al guardar el libro. Por favor, intenta de nuevo.');
@@ -103,7 +119,8 @@ export const BooksPage: React.FC = () => {
         setIsDeleteModalOpen(false);
         setIsModalOpen(false);
         setSelectedBook(null);
-        await dispatch(fetchBooks());
+        // Recargar la lista después de eliminar
+        dispatch(fetchBooks(debouncedSearchQuery || undefined));
       } catch (error) {
         console.error('Error al eliminar el libro:', error);
         alert('Error al eliminar el libro. Por favor, intenta de nuevo.');
@@ -196,7 +213,13 @@ export const BooksPage: React.FC = () => {
               <div>
                 {selectedBook.portada ? (
                   <img
-                    src={`data:image/jpeg;base64,${selectedBook.portada}`}
+                    src={
+                      selectedBook.portada.startsWith('/uploads') 
+                        ? `${import.meta.env.VITE_API_URL}${selectedBook.portada}`
+                        : selectedBook.portada.startsWith('data:') || selectedBook.portada.startsWith('http')
+                        ? selectedBook.portada 
+                        : `data:image/jpeg;base64,${selectedBook.portada}`
+                    }
                     alt={selectedBook.titulo}
                     style={{ width: '100%', borderRadius: 'var(--radius-lg)' }}
                   />
@@ -217,14 +240,16 @@ export const BooksPage: React.FC = () => {
                 )}
               </div>
               <div>
-                <div style={{ marginBottom: 'var(--spacing-lg)' }}>
-                  <p style={{ color: 'var(--text-tertiary)', fontSize: '0.875rem', margin: '0 0 0.25rem 0' }}>
-                    Autor
-                  </p>
-                  <p style={{ color: 'var(--text-primary)', fontSize: '1.125rem', margin: 0 }}>
-                    {selectedBook.autor}
-                  </p>
-                </div>
+                {selectedBook.autor && (
+                  <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+                    <p style={{ color: 'var(--text-tertiary)', fontSize: '0.875rem', margin: '0 0 0.25rem 0' }}>
+                      Autor
+                    </p>
+                    <p style={{ color: 'var(--text-primary)', fontSize: '1.125rem', margin: 0 }}>
+                      {selectedBook.autor}
+                    </p>
+                  </div>
+                )}
                 <div style={{ marginBottom: 'var(--spacing-lg)' }}>
                   <p style={{ color: 'var(--text-tertiary)', fontSize: '0.875rem', margin: '0 0 0.25rem 0' }}>
                     Género
@@ -241,12 +266,17 @@ export const BooksPage: React.FC = () => {
                     {selectedBook.universidad}
                   </p>
                 </div>
-                {selectedBook.archivo_pdf && (
-                  <Button variant="primary" style={{ width: '100%' }} onClick={handleViewPdf}>
-                    Ver PDF
-                  </Button>
-                )}
-                {canManageBooks && selectedBook.fuente !== 'externo' && (
+                
+                <Button 
+                  variant="primary" 
+                  style={{ width: '100%' }} 
+                  onClick={handleViewPdf}
+                  disabled={!selectedBook.pdf}
+                >
+                  {selectedBook.pdf ? 'Ver PDF' : 'PDF no disponible'}
+                </Button>
+                
+                {canManageBooks && selectedBook.fuente !== 'externo' && !(selectedBook as any).esExterno && (
                   <div style={{ display: 'flex', gap: 'var(--spacing-md)', marginTop: 'var(--spacing-md)' }}>
                     <Button
                       variant="secondary"
@@ -269,7 +299,7 @@ export const BooksPage: React.FC = () => {
                     </Button>
                   </div>
                 )}
-                {selectedBook.fuente === 'externo' && (
+                {(selectedBook.fuente === 'externo' || (selectedBook as any).esExterno) && (
                   <div style={{ 
                     marginTop: 'var(--spacing-md)', 
                     padding: 'var(--spacing-md)', 
@@ -294,10 +324,16 @@ export const BooksPage: React.FC = () => {
           title={selectedBook?.titulo}
           size="xl"
         >
-          {selectedBook?.archivo_pdf && (
+          {selectedBook?.pdf && (
             <div style={{ width: '100%', height: '90vh' }}>
               <iframe
-                src={`data:application/pdf;base64,${selectedBook.archivo_pdf}`}
+                src={
+                  selectedBook.pdf.startsWith('/uploads') 
+                    ? `${import.meta.env.VITE_API_URL}${selectedBook.pdf}`
+                    : selectedBook.pdf.startsWith('data:') 
+                    ? selectedBook.pdf 
+                    : `data:application/pdf;base64,${selectedBook.pdf}`
+                }
                 style={{ width: '100%', height: '100%', border: 'none', borderRadius: 'var(--radius-md)' }}
                 title="PDF Viewer"
               />
@@ -324,9 +360,6 @@ export const BooksPage: React.FC = () => {
               titulo: bookToEdit.titulo,
               autor: bookToEdit.autor,
               genero: bookToEdit.genero,
-              portada: bookToEdit.portada,
-              archivo_pdf: bookToEdit.archivo_pdf,
-              universidad: bookToEdit.universidad,
             } : undefined}
           />
         </Modal>
