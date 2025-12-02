@@ -13,12 +13,12 @@ async function bootstrap() {
   app.use(urlencoded({ extended: true, limit: process.env.MAX_REQUEST_SIZE ?? '10mb' }));
 
   app.enableCors({
-    origin: ['http://localhost:5174', 'http://localhost:3001'],
+    origin: ['http://localhost:5174', 'http://10.115.128.134:3001', 'http://localhost:5173', 'http://10.115.128.131:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true
   });
 
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  await app.listen(process.env.PORT ?? 3003, '0.0.0.0');
 }
 bootstrap();

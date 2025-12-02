@@ -1,4 +1,4 @@
-import { Controller, UseGuards } from "@nestjs/common";
+import { Controller, UseGuards, Headers } from "@nestjs/common";
 import { Get, Post, Put, Delete, Param, Body, Query } from "@nestjs/common"
 import { LibrosDTO } from "./dto/libros.dto";
 import { LibroDao } from "./dao/libro.dao";
@@ -18,11 +18,28 @@ export class LibrosController {
         private readonly utlApiService: UtlApiService
     ) { }
 
-    
-    @Get('/')
-    async getLibros(@Query('q') query: string) {
-        
+    @Get('/publico')
+    async getLibrosPublico(@Query('q') query: string) {
+        const librosLocales = query
+            ? await this.libroDao.buscarLibrosPorTitulo(query)
+            : await this.libroDao.obtenerTodos();
 
+        return librosLocales.map(l => ({
+            id: l.id,
+            titulo: l.titulo,
+            autor: l.autor,
+            genero: l.genero,
+            portada: l.portada,
+            pdf: l.archivo_pdf,
+            universidad: l.universidad || 'Universidad Tecnológica de La Habana'
+        }));
+    }
+
+    @Get('/')
+    async getLibros(
+        @Query('q') query: string,
+        @Headers('x-biblioteca-request') isExternalRequest: string
+    ) {
         const librosLocales = query
             ? await this.libroDao.buscarLibrosPorTitulo(query)
             : await this.libroDao.obtenerTodos();
@@ -30,9 +47,9 @@ export class LibrosController {
         const viewModelsLocales = librosLocales.map(l => LibroViewModel.fromEntity(l, 'interno'));
 
         let viewModelsExternos: LibroViewModel[] = [];
-        if (query) {
+        if (!isExternalRequest) {
             try {
-                const librosExternos = await this.utlApiService.buscarLibrosExterno(query);
+                const librosExternos = await this.utlApiService.buscarLibrosExterno(query || '');
                 viewModelsExternos = librosExternos.map((l: any) => LibroViewModel.fromEntity(l, 'externo'));
             } catch (e) {
                 console.error("Error fetching external books", e);

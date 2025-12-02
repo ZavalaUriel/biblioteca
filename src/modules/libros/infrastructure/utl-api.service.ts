@@ -5,25 +5,31 @@ export class UtlApiService {
 
     async buscarLibrosExterno(titulo: string): Promise<any> {
         try {
-            const urlEquipo = `http://localhost:3001/libros/buscar?q=${titulo}`;
+            const urlEquipo = titulo 
+                ? `http://10.115.128.134:3001/libros/buscar?q=${titulo}`
+                : `http://10.115.128.134:3001/libros/buscar`;
 
             const respuesta = await fetch(urlEquipo, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'x-biblioteca-request': 'true' 
                 },
             });
             
             if (!respuesta.ok) {
-                throw new Error(`Error al conectar con UTL: ${respuesta.statusText}`);
+                console.error(`Error al conectar con UTL: ${respuesta.status} ${respuesta.statusText}`);
+                return []; 
             }
 
             const data = await respuesta.json();
 
+            console.log('📚 Libros externos recibidos:', data.length);
+
             return data || [];
         } catch (error) {
             console.error('Error al buscar libros externo:', error);
-            throw error;
+            return []; 
         }
     }
 

@@ -8,11 +8,13 @@ export class LibroViewModel {
     autor: string;
     genero: string;
     portada: string; 
-    archivo_pdf: string; 
+    pdf: string; 
     esExterno: boolean;
 
 
     static fromEntity(libro: any, origen: string): LibroViewModel {
+        const esExterno = origen === 'externo';
+        
         return {
             id: libro.id,
             titulo: libro.titulo,
@@ -20,8 +22,11 @@ export class LibroViewModel {
             autor: libro.autor,
             genero: libro.genero,
             portada: libro.portada,
-            archivo_pdf: libro.archivo_pdf,
-            esExterno: origen === 'externo',
+            // Mapeo diferente según origen
+            pdf: esExterno 
+                ? (libro.pdf || libro.url_pdf || libro.link_pdf || libro.archivo_pdf || '') 
+                : libro.archivo_pdf,
+            esExterno,
         };
     }
 
