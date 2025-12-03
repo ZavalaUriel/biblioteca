@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchBooks, createBook, updateBook, deleteBook } from '../store/slices/bookSlice';
 import { BookGrid } from '../components/books/BookGrid';
 import { BookForm } from '../components/books/BookForm';
-import { Modal, Button, Input, Card } from '../components/common';
+import { Modal, Button } from '../components/common';
 import { GeneroLibro } from '../types';
 import type { Libro, LibroDTO } from '../types';
 
@@ -71,7 +71,13 @@ export const BooksPage: React.FC = () => {
           alert('Error: El libro no tiene un ID válido');
           return;
         }
-        await dispatch(updateBook({ id: bookId as any, book: bookData })).unwrap();
+        // Convertir el ID a número
+        const numericId = typeof bookId === 'string' ? parseInt(bookId, 10) : bookId;
+        if (isNaN(numericId)) {
+          alert('Error: El ID del libro no es válido');
+          return;
+        }
+        await dispatch(updateBook({ id: numericId, book: bookData })).unwrap();
         setBookToEdit(null);
       } else {
         await dispatch(createBook(bookData)).unwrap();
@@ -114,7 +120,14 @@ export const BooksPage: React.FC = () => {
           return;
         }
         
-        const result = await dispatch(deleteBook(bookId as any)).unwrap();
+        // Convertir el ID a número
+        const numericId = typeof bookId === 'string' ? parseInt(bookId, 10) : bookId;
+        if (isNaN(numericId)) {
+          alert('Error: El ID del libro no es válido');
+          return;
+        }
+        
+        const result = await dispatch(deleteBook(numericId)).unwrap();
         console.log('Libro eliminado exitosamente:', result);
         setIsDeleteModalOpen(false);
         setIsModalOpen(false);
@@ -335,7 +348,7 @@ export const BooksPage: React.FC = () => {
                   {selectedBook.pdf ? 'Ver PDF' : 'PDF no disponible'}
                 </Button>
                 
-                {canManageBooks && selectedBook.fuente !== 'externo' && !(selectedBook as any).esExterno && (
+                {canManageBooks && selectedBook.fuente !== 'externo' && !selectedBook.esExterno && (
                   <div style={{ display: 'flex', gap: 'var(--spacing-md)', marginTop: 'var(--spacing-md)' }}>
                     <Button
                       variant="secondary"
@@ -358,7 +371,7 @@ export const BooksPage: React.FC = () => {
                     </Button>
                   </div>
                 )}
-                {(selectedBook.fuente === 'externo' || (selectedBook as any).esExterno) && (
+                {(selectedBook.fuente === 'externo' || selectedBook.esExterno) && (
                   <div style={{ 
                     marginTop: 'var(--spacing-md)', 
                     padding: 'var(--spacing-md)', 
