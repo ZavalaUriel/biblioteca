@@ -2,19 +2,19 @@ module.exports = {
     apps: [
         {
             name: 'biblioteca-api',
-            script: 'dist/main.js',
+            script: './dist/main.js',
             instances: 1,
-            exec_mode: 'cluster',
+            exec_mode: 'fork',
             autorestart: true,
             watch: false,
             max_memory_restart: '1G',
             env: {
                 NODE_ENV: 'development',
-                PORT: 3000,
+                PORT: 3003,
             },
             env_production: {
                 NODE_ENV: 'production',
-                PORT: 3000,
+                PORT: 3003,
             },
             error_file: './logs/err.log',
             out_file: './logs/out.log',
