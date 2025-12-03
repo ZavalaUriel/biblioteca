@@ -6,8 +6,8 @@
 }
 
 .spinner {
-  border: 3px solid var(--bg-tertiary);
-  border-top-color: var(--space-purple);
+  border: 3px solid var(--utl-green-lighter);
+  border-top-color: var(--utl-green);
   border-radius: 50%;
 }
 

@@ -20,8 +20,8 @@
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
+  background: white;
+  border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: 1rem;
@@ -35,8 +35,9 @@
 
 .input:focus {
   outline: none;
-  border-color: var(--space-purple);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--utl-green);
+  box-shadow: 0 0 0 3px rgba(0, 168, 89, 0.1);
+  background: var(--utl-green-lighter);
 }
 
 .input::placeholder {
@@ -71,7 +72,7 @@
 .input:-webkit-autofill:hover,
 .input:-webkit-autofill:focus {
   -webkit-text-fill-color: var(--text-primary);
-  -webkit-box-shadow: 0 0 0 1000px var(--bg-tertiary) inset;
+  -webkit-box-shadow: 0 0 0 1000px white inset;
   transition: background-color 5000s ease-in-out 0s;
 }
 

@@ -13,8 +13,8 @@
 .book-select {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
+  background: white;
+  border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: 1rem;
@@ -25,8 +25,9 @@
 
 .book-select:focus {
   outline: none;
-  border-color: var(--space-purple);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--utl-green);
+  box-shadow: 0 0 0 3px rgba(0, 168, 89, 0.1);
+  background: var(--utl-green-lighter);
 }
 
 .book-form-files {
@@ -70,8 +71,8 @@
   justify-content: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-md) var(--spacing-lg);
-  background: var(--bg-tertiary);
-  border: 2px dashed var(--border-color);
+  background: white;
+  border: 2px dashed var(--utl-green-light);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   font-size: 0.875rem;
@@ -80,17 +81,18 @@
 }
 
 .file-upload:hover .file-upload-button {
-  border-color: var(--space-purple);
-  background: rgba(99, 102, 241, 0.05);
-  color: var(--space-purple);
+  border-color: var(--utl-green);
+  background: var(--utl-green-lighter);
+  color: var(--utl-green-dark);
 }
 
 .file-preview {
   display: flex;
   justify-content: center;
   padding: var(--spacing-md);
-  background: var(--bg-secondary);
+  background: var(--utl-green-lighter);
   border-radius: var(--radius-md);
+  border: 1px solid var(--utl-green-light);
 }
 
 .portada-preview {
@@ -110,6 +112,20 @@
   color: var(--space-purple);
   font-size: 0.875rem;
   margin: 0;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--utl-green-lighter);
+  border: 1px solid var(--utl-green-light);
+  border-radius: var(--radius-md);
+  color: var(--utl-green-dark);
+  font-size: 0.875rem;
+  margin-top: var(--spacing-sm);
+  font-weight: 500;
 }
 
 .book-form-actions {

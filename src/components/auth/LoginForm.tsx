@@ -34,23 +34,20 @@ export const LoginForm: React.FC = () => {
         <Card className="login-card" glow>
           <div className="login-header">
             <motion.div
-              className="login-logo"
-              animate={{
-                rotate: [0, 360],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatDelay: 3,
-              }}
+              className="login-logo-utl"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              📚
+              UTL
             </motion.div>
-            <h1 className="login-title">
-              <span className="title-gradient">Biblioteca</span> Digital
-            </h1>
-            <p className="login-subtitle">Sistema de Gestión Bibliotecaria</p>
+            <div className="login-title-group">
+              <h1 className="login-title">
+                <span className="title-gradient">Biblioteca Digital</span>
+              </h1>
+              <p className="login-subtitle">Universidad Tecnológica de León</p>
+              <div className="login-divider"></div>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="login-form">
@@ -98,7 +95,7 @@ export const LoginForm: React.FC = () => {
 
           <div className="login-footer">
             <p className="login-info">
-              ✨ Explora el universo del conocimiento ✨
+              Acceso al sistema de gestión bibliotecaria
             </p>
           </div>
         </Card>

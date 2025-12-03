@@ -3,7 +3,7 @@
 .app-container {
   min-height: 100vh;
   background: 
-    radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-    #000000;
+    radial-gradient(circle at 20% 80%, rgba(0, 168, 89, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 214, 108, 0.03) 0%, transparent 50%),
+    linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
 }

@@ -1,8 +1,8 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, rgba(0, 0, 0, 0.85) 100%);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
   z-index: var(--z-modal-backdrop);
 }
 
@@ -18,10 +18,10 @@
 }
 
 .modal {
-  background: var(--bg-tertiary);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: white;
+  border: 2px solid var(--utl-green-light);
   border-radius: var(--radius-xl);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   max-height: 90vh;
   overflow: hidden;
   display: flex;
@@ -78,8 +78,8 @@
 }
 
 .modal-close:hover {
-  background: rgba(99, 102, 241, 0.1);
-  color: var(--space-purple);
+  background: var(--utl-green-lighter);
+  color: var(--utl-green);
 }
 
 .modal-content {
@@ -94,10 +94,10 @@
 }
 
 .modal-content::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: var(--gray-100);
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: var(--space-purple);
+  background: var(--utl-green);
   border-radius: var(--radius-full);
 }

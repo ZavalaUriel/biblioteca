@@ -84,7 +84,7 @@ export const BookForm: React.FC<BookFormProps> = ({ onSubmit, onCancel, initialD
     }
   };
 
-  const handlePortadaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePortadaChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     console.log('🖼️ handlePortadaChange - file:', file);
     if (file) {
@@ -97,17 +97,31 @@ export const BookForm: React.FC<BookFormProps> = ({ onSubmit, onCancel, initialD
         return;
       }
       
-      console.log('✅ Portada válida:', file.name, file.size, 'bytes');
-      setPortadaFile(file);
-      
-      // Crear preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPortadaPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-      
-      setErrors({ ...errors, portada: '' });
+      try {
+        setLoading(true);
+        console.log('✅ Portada válida:', file.name, file.size, 'bytes');
+        
+        // Convertir la imagen a base64
+        const portadaB64 = await fileToBase64(file);
+        console.log('✅ Portada convertida a base64, length:', portadaB64.length);
+        
+        setPortadaFile(file);
+        setPortadaBase64(portadaB64);
+        
+        // Crear preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setPortadaPreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+        
+        setErrors({ ...errors, portada: '' });
+      } catch (error) {
+        console.error('Error al procesar la portada:', error);
+        setErrors({ ...errors, portada: 'Error al procesar la imagen' });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -127,36 +141,18 @@ export const BookForm: React.FC<BookFormProps> = ({ onSubmit, onCancel, initialD
       try {
         setLoading(true);
         console.log('✅ PDF válido:', file.name, file.size, 'bytes');
-        console.log('🔄 Extrayendo portada del PDF...');
         
-        // Extraer la primera página como portada
-        const portadaFile = await extractFirstPageAsFile(file);
-        console.log('✅ Portada extraída:', portadaFile.name, portadaFile.size, 'bytes');
-        
-        // Convertir ambos archivos a base64
+        // Convertir PDF a base64
         const pdfB64 = await fileToBase64(file);
-        const portadaB64 = await fileToBase64(portadaFile);
-        
-        console.log('✅ Archivos convertidos a base64');
-        console.log('  - PDF base64 length:', pdfB64.length);
-        console.log('  - Portada base64 length:', portadaB64.length);
+        console.log('✅ PDF convertido a base64, length:', pdfB64.length);
         
         setPdfFile(file);
-        setPortadaFile(portadaFile);
         setPdfBase64(pdfB64);
-        setPortadaBase64(portadaB64);
         
-        // Crear preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setPortadaPreview(e.target?.result as string);
-        };
-        reader.readAsDataURL(portadaFile);
-        
-        setErrors({ ...errors, pdf: '', portada: '' });
+        setErrors({ ...errors, pdf: '' });
       } catch (error) {
         console.error('Error al procesar el PDF:', error);
-        setErrors({ ...errors, pdf: 'Error al extraer la portada del PDF' });
+        setErrors({ ...errors, pdf: 'Error al procesar el archivo PDF' });
       } finally {
         setLoading(false);
       }
@@ -175,7 +171,9 @@ export const BookForm: React.FC<BookFormProps> = ({ onSubmit, onCancel, initialD
     if (!pdfBase64) {
       newErrors.pdf = 'El archivo PDF es requerido';
     }
-    // La portada se genera automáticamente del PDF
+    if (!portadaBase64) {
+      newErrors.portada = 'La portada es requerida';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -262,11 +260,50 @@ export const BookForm: React.FC<BookFormProps> = ({ onSubmit, onCancel, initialD
       <div className="book-form-files">
         <div className="file-upload-group">
           <label className="file-upload-label">
+            <ImageIcon size={20} />
+            Portada del Libro <span style={{ color: 'var(--accent-danger)' }}>*</span>
+          </label>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--spacing-sm)' }}>
+            Sube una imagen para la portada del libro (JPG, PNG, máx. 5MB)
+          </p>
+          <label className="file-upload">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handlePortadaChange}
+              className="file-input"
+              disabled={loading}
+            />
+            <div className="file-upload-button">
+              <Upload size={20} />
+              {loading ? 'Procesando...' : (portadaFile ? 'Cambiar Portada' : 'Seleccionar Portada')}
+            </div>
+          </label>
+          {portadaFile && (
+            <div className="file-info">
+              <ImageIcon size={16} />
+              <span>{portadaFile.name}</span>
+            </div>
+          )}
+          {errors.portada && <p className="input-error-message">{errors.portada}</p>}
+          {portadaPreview && (
+            <div className="file-preview">
+              <img
+                src={portadaPreview}
+                alt="Vista previa de portada"
+                className="portada-preview"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="file-upload-group">
+          <label className="file-upload-label">
             <FileText size={20} />
             Archivo PDF <span style={{ color: 'var(--accent-danger)' }}>*</span>
           </label>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--spacing-sm)' }}>
-            La portada se generará automáticamente de la primera página del PDF
+            Sube el archivo PDF del libro (máx. 10MB)
           </p>
           <label className="file-upload">
             <input
@@ -289,22 +326,6 @@ export const BookForm: React.FC<BookFormProps> = ({ onSubmit, onCancel, initialD
           )}
           {errors.pdf && <p className="input-error-message">{errors.pdf}</p>}
         </div>
-
-        {portadaPreview && (
-          <div className="file-upload-group">
-            <label className="file-upload-label">
-              <ImageIcon size={20} />
-              Vista previa de portada (generada automáticamente)
-            </label>
-            <div className="file-preview">
-              <img
-                src={portadaPreview}
-                alt="Portada generada del PDF"
-                className="portada-preview"
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="book-form-actions">

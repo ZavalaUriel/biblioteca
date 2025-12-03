@@ -1,17 +1,20 @@
 .card {
-  background: var(--bg-tertiary);
+  background: white;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   padding: var(--spacing-xl);
   transition: all var(--transition-normal);
+  box-shadow: var(--shadow-md);
 }
 
 .card-glow {
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-lg);
 }
 
 .card-glow:hover {
-  box-shadow: var(--shadow-glow-lg);
+  box-shadow: 0 8px 24px rgba(0, 168, 89, 0.15);
+  transform: translateY(-2px);
+  border-color: var(--utl-green-light);
 }
 
 @media (max-width: 768px) {

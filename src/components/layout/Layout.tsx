@@ -1,6 +1,5 @@
 import React from 'react';
 import { Header } from './Header';
-import { Sidebar } from './Sidebar';
 import './Layout.css';
 
 interface LayoutProps {
@@ -12,10 +11,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="layout">
       <div className="stars-background" />
       <Header />
-      <div className="layout-body">
-        <Sidebar />
-        <main className="layout-content">{children}</main>
-      </div>
+      <main className="layout-content">{children}</main>
     </div>
   );
 };

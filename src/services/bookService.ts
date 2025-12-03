@@ -4,7 +4,7 @@ import type { Libro, LibroDTO, LibroBusquedaParams } from '../types';
 export const bookService = {
   getAllBooks: async (params?: LibroBusquedaParams): Promise<Libro[]> => {
     const queryString = params?.q ? `?q=${encodeURIComponent(params.q)}` : '';
-    const response = await api.get(`/libro${queryString}`);
+    const response = await api.get(`/libro/publico${queryString}`);
     return response.data;
   },
 

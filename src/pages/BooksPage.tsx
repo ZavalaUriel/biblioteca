@@ -144,56 +144,115 @@ export const BooksPage: React.FC = () => {
     <div className="books-page">
       <div>
         <div style={{ marginBottom: 'var(--spacing-2xl)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
-            <h1 style={{ fontSize: '2rem', fontWeight: '700', margin: 0 }}>
-              Catálogo de Libros
-            </h1>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'flex-start', 
+            marginBottom: 'var(--spacing-lg)',
+            flexWrap: 'wrap',
+            gap: 'var(--spacing-md)'
+          }}>
+            <div>
+              <h1 style={{ 
+                fontSize: '2.25rem', 
+                fontWeight: '700', 
+                margin: 0,
+                marginBottom: 'var(--spacing-xs)',
+                background: 'linear-gradient(135deg, var(--utl-green), var(--utl-green-accent))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                Catálogo de Libros
+              </h1>
+              <p style={{ 
+                color: 'var(--text-secondary)', 
+                margin: 0,
+                fontSize: '0.95rem'
+              }}>
+                Explora y gestiona la colección de libros
+              </p>
+            </div>
             {canManageBooks && (
               <Button
                 variant="primary"
                 icon={<Plus size={20} />}
                 onClick={handleOpenAddModal}
+                size="lg"
               >
                 Agregar Libro
               </Button>
             )}
           </div>
 
-          <Card>
-            <div style={{ display: 'flex', gap: 'var(--spacing-md)', flexWrap: 'wrap' }}>
-              <div style={{ flex: 1, minWidth: '300px' }}>
-                <Input
-                  placeholder="Buscar por título o autor..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  icon={<Search size={20} />}
-                />
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: '2fr 1fr', 
+            gap: 'var(--spacing-md)',
+            alignItems: 'start'
+          }}>
+            <div style={{ 
+              position: 'relative',
+              background: 'white',
+              borderRadius: 'var(--radius-xl)',
+              border: '2px solid var(--utl-green-light)',
+              boxShadow: '0 4px 12px rgba(0, 168, 89, 0.1)',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                position: 'absolute',
+                left: '1rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'var(--utl-green)',
+                zIndex: 1,
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <Search size={22} />
               </div>
-              <div style={{ minWidth: '200px' }}>
-                <select
-                  value={selectedGenre}
-                  onChange={(e) => setSelectedGenre(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    background: 'var(--bg-tertiary)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: 'var(--radius-md)',
-                    color: 'var(--text-primary)',
-                    fontSize: '1rem',
-                    fontFamily: 'inherit',
-                  }}
-                >
-                  <option value="">Todos los géneros</option>
-                  {Object.values(GeneroLibro).map((genero) => (
-                    <option key={genero} value={genero}>
-                      {genero}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <input
+                type="text"
+                placeholder="Buscar por título, autor o género..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '1rem 1rem 1rem 3.5rem',
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-primary)',
+                  fontSize: '1rem',
+                  fontFamily: 'inherit',
+                  outline: 'none'
+                }}
+              />
             </div>
-          </Card>
+            <select
+              value={selectedGenre}
+              onChange={(e) => setSelectedGenre(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '1rem 1rem',
+                background: 'white',
+                border: '2px solid var(--border-color)',
+                borderRadius: 'var(--radius-xl)',
+                color: 'var(--text-primary)',
+                fontSize: '1rem',
+                fontFamily: 'inherit',
+                cursor: 'pointer',
+                transition: 'all var(--transition-normal)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+              }}
+            >
+              <option value="">📚 Todos los géneros</option>
+              {Object.values(GeneroLibro).map((genero) => (
+                <option key={genero} value={genero}>
+                  {genero}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <BookGrid
