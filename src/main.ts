@@ -8,21 +8,16 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  app.use(json({ limit: process.env.MAX_REQUEST_SIZE ?? '10mb' }));
+  app.use(json({ limit: process.env.MAX_REQUEST_SIZE ?? '40mb' }));
   app.use(
     urlencoded({
       extended: true,
-      limit: process.env.MAX_REQUEST_SIZE ?? '10mb',
+      limit: process.env.MAX_REQUEST_SIZE ?? '40mb',
     }),
   );
 
   app.enableCors({
-    origin: [
-      'http://localhost:5174',
-      'http://10.115.128.134:3001',
-      'http://localhost:5173',
-      'http://10.115.128.131:3000',
-    ],
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true,
